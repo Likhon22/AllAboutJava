@@ -2,47 +2,73 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Demonstrates using Timer and TimerTask in Java.
+ * Demonstrates using Timer and TimerTask for scheduling tasks.
  */
 public class TimerExample {
     public static void main(String[] args) {
-        System.out.println("=== Timer Example ===");
-        System.out.println("Starting magical countdown...");
+        System.out.println("=== Timer and TimerTask Example ===");
         
-        // Create a magical timer
+        // Create a timer
         Timer timer = new Timer();
-
-        // Create a task to be scheduled
-        TimerTask task = new TimerTask() {
+        
+        // Magical effect countdown task
+        TimerTask magicTask = new TimerTask() {
             int countdown = 3;
-
+            
             @Override
             public void run() {
-                System.out.println("Magical effect happening! " + countdown + " seconds remaining");
+                System.out.println("Magical effect happening!");
                 countdown--;
-
-                if (countdown < 0) {
+                
+                if (countdown == 0) {
                     System.out.println("Spell completed!");
                     timer.cancel();  // Stop the timer when done
                 }
             }
         };
-
-        // Schedule the task to run every 1 second (1000ms) starting immediately
-        timer.schedule(task, 0, 1000);
         
-        System.out.println("Timer scheduled. Main thread continues...");
+        // Schedule the task to run immediately and repeat every 2 seconds
+        System.out.println("Casting spell...");
+        timer.schedule(magicTask, 0, 2000);
         
-        // The main thread will continue executing
-        // In a real application, you might wait for user input or do other processing
+        // Enemy scanning task
+        TimerTask enemyScanner = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("\nScanning for enemies...");
+                // 30% chance to find an enemy
+                if (Math.random() < 0.3) {
+                    System.out.println("Enemy detected!");
+                } else {
+                    System.out.println("Area is clear.");
+                }
+            }
+        };
         
-        // Let the program run for a bit to see the timer in action
+        // Schedule the enemy scanner to run after 1 second and repeat every 5 seconds
+        Timer enemyTimer = new Timer();
+        enemyTimer.schedule(enemyScanner, 1000, 5000);
+        
+        // Note: In a real application, you would typically:
+        // 1. Store timer references
+        // 2. Cancel them appropriately when done
+        // 3. Handle thread interruptions
+        
+        // For this example, we'll let the timers run until the main thread completes
+        // In a real program, you might use timer.cancel() when appropriate
+        
+        System.out.println("\nTimer tasks are now running in the background.");
+        System.out.println("(This example will run for about 10 seconds)");
+        
+        // Simulate the main program running for 10 seconds
         try {
-            Thread.sleep(5000);  // Wait 5 seconds
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         
-        System.out.println("Main program exiting.");
+        // Clean up the timers
+        enemyTimer.cancel();
+        System.out.println("\nExample completed.");
     }
 }
