@@ -1222,7 +1222,6 @@ public static void selectCharacterClass(String className) {
 selectCharacterClass("Mage");
 ```
 
-
 ### The Ternary Operator: Quick Decisions
 
 The ternary operator is like a shortcut for simple yes/no questions:
@@ -2289,6 +2288,494 @@ When working with files, remember:
 
 With these magical file tools, your Java programs can remember information even after they finish running!
 
+### Generics: Magical Containers
+
+Imagine you're a wizard who needs to create magical containers that can hold any type of item - potions, scrolls, wands, or even other wizards! But you want to make sure that when someone reaches into the container, they get back exactly what they put in. That's what generics are all about!
+
+```java
+// A magical box that can hold any type of item
+public class Box<T> {
+    T item;  // The T is a placeholder for any type
+
+    public void setItem(T item) {
+        this.item = item;
+    }
+
+    public T getItem() {
+        return this.item;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Creating a box for strings
+        Box<String> stringBox = new Box<>();
+        stringBox.setItem("Magic Scroll");
+        System.out.println(stringBox.getItem());  // Magic Scroll
+
+        // Creating a box for integers
+        Box<Integer> numberBox = new Box<>();
+        numberBox.setItem(42);
+        System.out.println(numberBox.getItem());  // 42
+
+        // The beauty of generics: Type safety!
+        // These won't compile:
+        // stringBox.setItem(42);          // Can't put an Integer into a String box
+        // Integer n = numberBox.getItem(); // No need to cast, the type is already known
+    }
+}
+```
+
+#### Why Are Generics Magical?
+
+1. **Type Safety**: The compiler ensures you don't put a potion in a scroll box
+
+   ```java
+   // This works:
+   CharacterClass myClass = CharacterClass.WARRIOR;
+
+   // This would fail to compile:
+   // CharacterClass myClass = "Warrior"; // Error!
+   // CharacterClass myClass = 5;        // Error!
+   ```
+
+2. **Elimination of Casting**: No need to tell Java what type something is
+
+   ```java
+   // Without generics (old way):
+   Object item = oldBox.getItem();
+   String scroll = (String) item;  // Explicit casting, could fail at runtime!
+
+   // With generics (modern way):
+   String scroll = stringBox.getItem();  // No casting needed, type safety assured
+   ```
+
+3. **Code Reusability**: Write once, use with any type
+   - One Box class works for potions, scrolls, wands, and more!
+
+#### Generics in Your Adventuring Kit
+
+Generics are perfect for creating flexible collections and utilities:
+
+```java
+// A magical chest for storing an inventory of any item type
+public class Inventory<E> {
+    private ArrayList<E> items = new ArrayList<>();
+
+    public void addItem(E item) {
+        items.add(item);
+    }
+
+    public E retrieveItem(int index) {
+        return items.get(index);
+    }
+
+    public int count() {
+        return items.size();
+    }
+}
+
+// In your game:
+Inventory<Potion> potionBag = new Inventory<>();
+potionBag.addItem(new HealthPotion());
+potionBag.addItem(new ManaPotion());
+
+Inventory<Weapon> armory = new Inventory<>();
+armory.addItem(new Sword());
+armory.addItem(new Bow());
+```
+
+#### Generic Methods: Spells That Work on Any Item
+
+Just like you can have generic classes, you can have generic methods that work with any type:
+
+```java
+public static <T> void displayItem(T item) {
+    System.out.println("Examining item: " + item.toString());
+}
+
+// Call with any type
+displayItem("Magic Scroll");  // Works with String
+displayItem(new Sword());     // Works with Sword
+displayItem(42);             // Works with Integer
+```
+
+#### Generic Wildcards: The Mystery Container
+
+Sometimes you want to be flexible about what types a container can hold:
+
+```java
+// A method that can count ANY type of inventory
+public static int countItems(Inventory<?> inventory) {
+    return inventory.count();
+}
+
+// This works with ANY inventory:
+int potionCount = countItems(potionBag);  // Inventory<Potion>
+int weaponCount = countItems(armory);     // Inventory<Weapon>
+```
+
+#### Type Bounds: Containers with Requirements
+
+What if you want a container that only holds magical items?
+
+```java
+// Using an upper bound: only MagicalItem or its subclasses allowed
+public class MagicChest<T extends MagicalItem> {
+    T item;
+
+    public void store(T item) {
+        System.out.println("The chest glows as you store: " + item.getName());
+        this.item = item;
+    }
+
+    public void activateMagic() {
+        item.castSpell();  // Safe! We know it's a MagicalItem
+    }
+}
+
+// This works:
+MagicChest<Wand> wandChest = new MagicChest<>();
+
+// This won't compile:
+// MagicChest<Sword> swordChest = new MagicChest<>();  // If Sword isn't magical
+```
+
+By mastering generics, you gain the power to create flexible code that works with any type while maintaining type safety. It's like having a set of universal tools that adapt to whatever materials you're working with!
+
+### HashMaps: Your Magical Dictionary
+
+Imagine you're a royal record keeper who needs to quickly find information by name or ID. If you had thousands of scrolls, searching one by one would take forever! HashMaps are like enchanted dictionaries that instantly find what you're looking for:
+
+```java
+// From HashMap/Main.java
+import java.util.HashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        // a data structure that stores key-value pairs - keys are unique and values can be duplicated
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // Adding items to our magical dictionary
+        map.put("math", 121);
+        map.put("science", 122);
+        map.put("english", 123);
+        map.put("history", 124);
+        System.out.println(map); // Prints: {science=122, math=121, history=124, english=123}
+
+        // Looking up values by key - instant access!
+        System.out.println(map.get("math"));     // 121
+        System.out.println(map.get("science"));  // 122
+
+        // Checking if something exists
+        System.out.println(map.containsKey("math"));    // true
+        System.out.println(map.containsValue(129));     // false
+
+        // Removing an entry
+        map.remove("math");
+        System.out.println(map); // Prints: {science=122, history=124, english=123}
+
+        // Getting useful information
+        System.out.println(map.size());       // 3
+        System.out.println(map.isEmpty());    // false
+        System.out.println(map.keySet());     // [science, history, english]
+        System.out.println(map.values());     // [122, 124, 123]
+        System.out.println(map.entrySet());   // [science=122, history=124, english=123]
+
+        // Looping through all entries
+        for(String key : map.keySet()){
+            System.out.println(key + " - " + map.get(key));
+        }
+    }
+}
+```
+
+#### How HashMaps Work: The Magic Inside
+
+A HashMap is like a bookshelf with special tabs that let you instantly find what you need:
+
+1. **Fast Access**: Find any value by its key in near-constant time (O(1))
+2. **Key-Value Pairs**: Each entry has a key (like a name) and a value (like a spell description)
+3. **Unique Keys**: No two entries can have the same key (but values can be duplicated)
+4. **Null Allowed**: Unlike some collections, HashMaps can have null keys and values
+
+#### Practical HashMap Examples
+
+**Character Attributes:**
+
+```java
+// Creating a character stats system
+HashMap<String, Integer> heroStats = new HashMap<>();
+heroStats.put("strength", 18);
+heroStats.put("intelligence", 14);
+heroStats.put("dexterity", 16);
+heroStats.put("constitution", 15);
+
+// During battle
+int attackPower = heroStats.get("strength") + 5; // Base strength + weapon bonus
+System.out.println("Attack power: " + attackPower);
+
+// Level up! Increase stats
+heroStats.put("strength", heroStats.get("strength") + 1);
+System.out.println("New strength: " + heroStats.get("strength"));
+```
+
+**Item Pricing:**
+
+```java
+// Shop inventory with prices
+HashMap<String, Double> shopPrices = new HashMap<>();
+shopPrices.put("healing potion", 25.0);
+shopPrices.put("magic scroll", 150.0);
+shopPrices.put("iron sword", 75.0);
+
+// Calculate purchase total
+String[] shoppingCart = {"healing potion", "healing potion", "iron sword"};
+double total = 0;
+
+for (String item : shoppingCart) {
+    if (shopPrices.containsKey(item)) {
+        total += shopPrices.get(item);
+        System.out.println("Added " + item + " for " + shopPrices.get(item) + " gold");
+    } else {
+        System.out.println("Sorry, we don't sell " + item);
+    }
+}
+
+System.out.println("Your total comes to " + total + " gold pieces");
+```
+
+### Enums: Magical Constants
+
+Enums are like magical classifications that ensure consistency throughout your kingdom. Think of them as official royal categories that can't be changed or misspelled:
+
+```java
+public class AdventureGame {
+    // Define the official seasons recognized by the kingdom
+    enum Season {
+        SPRING, SUMMER, FALL, WINTER
+    }
+
+    // Define official character classes
+    enum CharacterClass {
+        WARRIOR, MAGE, ROGUE, CLERIC, RANGER
+    }
+
+    public static void main(String[] args) {
+        // Set the current season
+        Season currentSeason = Season.FALL;
+
+        // Check what season it is
+        switch(currentSeason) {
+            case SPRING:
+                System.out.println("The flowers are blooming, perfect for herb gathering quests!");
+                break;
+            case SUMMER:
+                System.out.println("The hot sun beats down, desert quests give bonus experience!");
+                break;
+            case FALL:
+                System.out.println("The harvest season brings trading opportunities and festivals!");
+                break;
+            case WINTER:
+                System.out.println("The snowy peaks are treacherous, but contain rare treasures!");
+                break;
+        }
+
+        // Select a character class
+        CharacterClass playerClass = CharacterClass.MAGE;
+        System.out.println("You've chosen the " + playerClass + " class!");
+
+        // Enums can be compared using ==
+        if (playerClass == CharacterClass.MAGE) {
+            System.out.println("You start with a magical staff and 3 basic spells!");
+        }
+    }
+}
+```
+
+#### Why Enums Are Magical
+
+1. **Type Safety**: You can't accidentally use an invalid value
+
+   ```java
+   // This works:
+   CharacterClass myClass = CharacterClass.WARRIOR;
+
+   // This would fail to compile:
+   // CharacterClass myClass = "Warrior"; // Error!
+   // CharacterClass myClass = 5;        // Error!
+   ```
+
+2. **Built-in Methods**: All enums come with helpful spells
+
+   ```java
+   // Getting the name as a string
+   String className = CharacterClass.ROGUE.name();  // "ROGUE"
+
+   // Getting the position in the enum declaration
+   int classOrder = CharacterClass.CLERIC.ordinal();  // 3 (zero-indexed)
+
+   // Get all possible values
+   for (CharacterClass cls : CharacterClass.values()) {
+       System.out.println("Class option: " + cls);
+   }
+   ```
+
+3. **Enums Can Have Powers**: Add methods and fields to your enums
+
+```java
+enum Spell {
+    FIREBALL(25, "fire"),
+    ICE_SHARD(15, "ice"),
+    LIGHTNING_BOLT(30, "lightning"),
+    HEAL(20, "holy");
+
+    private final int manaCost;
+    private final String element;
+
+    // Constructor
+    Spell(int cost, String element) {
+        this.manaCost = cost;
+        this.element = element;
+    }
+
+    // Methods
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    public String getElement() {
+        return element;
+    }
+
+    public String cast() {
+        return "Casting " + this.name().toLowerCase().replace('_', ' ') +
+               " for " + manaCost + " mana!";
+    }
+}
+
+// Using our enhanced enum
+Spell mySpell = Spell.LIGHTNING_BOLT;
+System.out.println("Mana needed: " + mySpell.getManaCost());
+System.out.println("Element type: " + mySpell.getElement());
+System.out.println(mySpell.cast());
+```
+
+#### Where to Use Enums in Your Adventure
+
+- **Game States**: `MAIN_MENU`, `PLAYING`, `PAUSED`, `GAME_OVER`
+- **Difficulty Levels**: `EASY`, `NORMAL`, `HARD`, `LEGENDARY`
+- **Character Status**: `HEALTHY`, `POISONED`, `FROZEN`, `CONFUSED`
+- **Equipment Slots**: `HEAD`, `CHEST`, `LEGS`, `FEET`, `MAIN_HAND`, `OFF_HAND`
+- **Quest Status**: `NOT_STARTED`, `IN_PROGRESS`, `COMPLETED`, `FAILED`
+
+Enums bring order and safety to your magical kingdom by ensuring everyone speaks the same language when referring to important categories and states!
+
+### Working with Files
+
+Think of files like treasure chests - you can store your loot (data) in them and open them later to retrieve it! Java gives you magical tools to work with these chests:
+
+```java
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        // WRITING TO FILES - Storing your treasures
+        try(FileWriter writer = new FileWriter("text.txt")) {
+            writer.write("I write pizza");
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing the treasure map.");
+        }
+
+        // READING FROM FILES - Retrieving your treasures
+        try (BufferedReader reader = new BufferedReader(new FileReader("text.txt"))) {
+            System.out.println("Successfully opened the treasure chest!");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Found treasure: " + line);
+            }
+        } catch (IOException e) {
+            System.out.println("The treasure chest couldn't be opened.");
+        }
+    }
+}
+```
+
+**What each magic item does:**
+
+1. **FileWriter** - The Quill of Creation
+
+   - Creates or overwrites files with new content
+   - Takes a filename in its constructor
+   - Has methods like `write()` to add text
+   - Must be closed when done (try-with-resources does this automatically)
+
+2. **FileReader** - The Scroll Reader
+
+   - Opens a connection to an existing file for reading
+   - Reads raw character data, but usually needs help
+   - Best used with BufferedReader for efficiency
+
+3. **BufferedReader** - The Efficient Scholar
+
+   - Wraps around a FileReader to make reading more efficient
+   - Provides helpful methods like `readLine()` to read a whole line at once
+   - Buffers data to reduce the number of actual disk operations
+
+4. **IOException** - The Warning System
+   - This magical alarm tells you when something goes wrong
+   - Common causes: missing files, no permissions, disk errors
+   - Always handle these with try/catch blocks!
+
+**File Reading Example:**
+
+```java
+// Reading a character sheet from a file
+try (BufferedReader characterReader = new BufferedReader(new FileReader("hero.txt"))) {
+ String characterName = characterReader.readLine();
+ String characterClass = characterReader.readLine();
+ int level = Integer.parseInt(characterReader.readLine());
+
+ System.out.println("Character loaded!");
+ System.out.println("Name: " + characterName);
+ System.out.println("Class: " + characterClass);
+ System.out.println("Level: " + level);
+} catch (IOException e) {
+ System.out.println("Could not load character file.");
+} catch (NumberFormatException e) {
+ System.out.println("Character file is corrupted.");
+}
+```
+
+**File Writing Example:**
+
+```java
+// Saving a high score to a file
+try (FileWriter scoreWriter = new FileWriter("highscores.txt", true)) { // true for append mode
+    String playerName = "Dragon Slayer";
+    int score = 9500;
+
+    // Add the new high score as a new line
+    scoreWriter.write(playerName + ": " + score + "\n");
+    System.out.println("High score recorded!");
+} catch (IOException e) {
+    System.out.println("Could not save your score.");
+}
+```
+
+When working with files, remember:
+
+- Always close your resources (try-with-resources does this for you)
+- Check for errors with proper exception handling
+- Files can be locked by other programs or have permission issues
+- Files might not exist when you try to read them
+
+With these magical file tools, your Java programs can remember information even after they finish running!
+
 ### Wrapper Classes: Turning Primitives into Objects
 
 Sometimes you need to treat primitive types like objects. That's where wrapper classes come in:
@@ -2481,259 +2968,138 @@ System.out.println("New spell book releases in: " + hoursUntil + " hours and "
 
 Time tracking is crucial for any well-designed application - whether you're creating quest logs, scheduling events, or analyzing player activity patterns!
 
-### Generics: Magical Containers
+### Threading: Magic Clones for Multitasking
 
-Imagine you're a wizard who needs to create magical containers that can hold any type of item - potions, scrolls, wands, or even other wizards! But you want to make sure that when someone reaches into the container, they get back exactly what they put in. That's what generics are all about!
+Imagine you're a wizard who can create magical clones of yourself - one clone reads ancient texts while another brews potions, all at the same time! In Java, threading lets your programs perform this same magic:
 
 ```java
-// A magical box that can hold any type of item
-public class Box<T> {
-    T item;  // The T is a placeholder for any type
-
-    public void setItem(T item) {
-        this.item = item;
-    }
-
-    public T getItem() {
-        return this.item;
-    }
-}
+// From Threading/Main.java
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Creating a box for strings
-        Box<String> stringBox = new Box<>();
-        stringBox.setItem("Magic Scroll");
-        System.out.println(stringBox.getItem());  // Magic Scroll
+        // Create our magical listening tool
+        Scanner scanner = new Scanner(System.in);
 
-        // Creating a box for integers
-        Box<Integer> numberBox = new Box<>();
-        numberBox.setItem(42);
-        System.out.println(numberBox.getItem());  // 42
+        // Create and prepare a timed task
+        MyRunnable runnable = new MyRunnable();
 
-        // The beauty of generics: Type safety!
-        // These won't compile:
-        // stringBox.setItem(42);          // Can't put an Integer into a String box
-        // Integer n = numberBox.getItem(); // No need to cast, the type is already known
+        // Create a magical clone (thread) and give it the task
+        Thread thread = new Thread(runnable);
+
+        // Send the clone off on its mission!
+        thread.start();
+
+        // Ask for input while the clone counts down
+        System.out.print("You have 5s to enter your name:");
+        String name = scanner.nextLine();
+
+        System.out.println("Hello " + name);
+        scanner.close();
     }
 }
 ```
 
-#### Why Are Generics Magical?
-
-1. **Type Safety**: The compiler ensures you don't put a potion in a scroll box
-
-   - Prevents "ClassCastException" at runtime
-   - Catches errors during compilation instead
-
-2. **Elimination of Casting**: No need to tell Java what type something is
-
-   ```java
-   // Without generics (old way):
-   Object item = oldBox.getItem();
-   String scroll = (String) item;  // Explicit casting, could fail at runtime!
-
-   // With generics (modern way):
-   String scroll = stringBox.getItem();  // No casting needed, type safety assured
-   ```
-
-3. **Code Reusability**: Write once, use with any type
-   - One Box class works for potions, scrolls, wands, and more!
-
-#### Generics in Your Adventuring Kit
-
-Generics are perfect for creating flexible collections and utilities:
-
 ```java
-// A magical chest for storing an inventory of any item type
-public class Inventory<E> {
-    private ArrayList<E> items = new ArrayList<>();
-
-    public void addItem(E item) {
-        items.add(item);
-    }
-
-    public E retrieveItem(int index) {
-        return items.get(index);
-    }
-
-    public int count() {
-        return items.size();
-    }
-}
-
-// In your game:
-Inventory<Potion> potionBag = new Inventory<>();
-potionBag.addItem(new HealthPotion());
-potionBag.addItem(new ManaPotion());
-
-Inventory<Weapon> armory = new Inventory<>();
-armory.addItem(new Sword());
-armory.addItem(new Bow());
-```
-
-#### Generic Methods: Spells That Work on Any Item
-
-Just like you can have generic classes, you can have generic methods that work with any type:
-
-```java
-public static <T> void displayItem(T item) {
-    System.out.println("Examining item: " + item.toString());
-}
-
-// Call with any type
-displayItem("Magic Scroll");  // Works with String
-displayItem(new Sword());     // Works with Sword
-displayItem(42);             // Works with Integer
-```
-
-#### Generic Wildcards: The Mystery Container
-
-Sometimes you want to be flexible about what types a container can hold:
-
-```java
-// A method that can count ANY type of inventory
-public static int countItems(Inventory<?> inventory) {
-    return inventory.count();
-}
-
-// This works with ANY inventory:
-int potionCount = countItems(potionBag);  // Inventory<Potion>
-int weaponCount = countItems(armory);     // Inventory<Weapon>
-```
-
-#### Type Bounds: Containers with Requirements
-
-What if you want a container that only holds magical items?
-
-```java
-// Using an upper bound: only MagicalItem or its subclasses allowed
-public class MagicChest<T extends MagicalItem> {
-    T item;
-
-    public void store(T item) {
-        System.out.println("The chest glows as you store: " + item.getName());
-        this.item = item;
-    }
-
-    public void activateMagic() {
-        item.castSpell();  // Safe! We know it's a MagicalItem
-    }
-}
-
-// This works:
-MagicChest<Wand> wandChest = new MagicChest<>();
-
-// This won't compile:
-// MagicChest<Sword> swordChest = new MagicChest<>();  // If Sword isn't magical
-```
-
-By mastering generics, you gain the power to create flexible code that works with any type while maintaining type safety. It's like having a set of universal tools that adapt to whatever materials you're working with!
-
-### Working with Files
-
-Think of files like treasure chests - you can store your loot (data) in them and open them later to retrieve it! Java gives you magical tools to work with these chests:
-
-```java
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
-public class Main {
-    public static void main(String[] args) {
-        // WRITING TO FILES - Storing your treasures
-        try(FileWriter writer = new FileWriter("text.txt")) {
-            writer.write("I write pizza");
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred while writing the treasure map.");
-        }
-
-        // READING FROM FILES - Retrieving your treasures
-        try (BufferedReader reader = new BufferedReader(new FileReader("text.txt"))) {
-            System.out.println("Successfully opened the treasure chest!");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println("Found treasure: " + line);
+// From Threading/MyRunnable.java
+public class MyRunnable implements Runnable {
+    @Override
+    public void run() {
+        // This code runs in a separate timeline!
+        for (int i = 1; i <= 5; i++) {
+            try {
+                // The magical clone pauses for 1 second
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Thread interrupted");
             }
-        } catch (IOException e) {
-            System.out.println("The treasure chest couldn't be opened.");
+
+            // After 5 seconds, time's up!
+            if (i == 5) {
+                System.out.println("Time is up!");
+                break;
+            }
         }
     }
 }
 ```
 
-**What each magic item does:**
+#### What's Happening Here? The Threading Magic Explained
 
-1. **FileWriter** - The Quill of Creation
+1. **Creating a Task (MyRunnable)**: Like writing instructions for your magical clone
 
-   - Creates or overwrites files with new content
-   - Takes a filename in its constructor
-   - Has methods like `write()` to add text
-   - Must be closed when done (try-with-resources does this automatically)
+   - `implements Runnable` means "this class contains a task that can run separately"
+   - The `run()` method contains what the clone will do - count for 5 seconds
 
-2. **FileReader** - The Scroll Reader
+2. **Creating a Thread**: Summoning the magical clone
 
-   - Opens a connection to an existing file for reading
-   - Reads raw character data, but usually needs help
-   - Best used with BufferedReader for efficiency
+   - `new Thread(runnable)` creates a clone that knows what task to do
+   - The clone exists but hasn't started working yet
 
-3. **BufferedReader** - The Efficient Scholar
+3. **Starting the Thread**: Sending the clone to work
 
-   - Wraps around a FileReader to make reading more efficient
-   - Provides helpful methods like `readLine()` to read a whole line at once
-   - Buffers data to reduce the number of actual disk operations
+   - `thread.start()` activates the clone and makes it begin its task
+   - This doesn't block your main program from continuing
 
-4. **IOException** - The Warning System
-   - This magical alarm tells you when something goes wrong
-   - Common causes: missing files, no permissions, disk errors
-   - Always handle these with try/catch blocks!
+4. **Two Things Happen At Once**: The true magic of threading!
 
-**File Reading Example:**
+   - While your clone is counting down seconds in the background
+   - Your main program asks for the user's name
+   - These happen in parallel, creating a time-limited input challenge
+
+5. **The Timer Experience**:
+   - The user has 5 seconds to enter their name before "Time is up!" is printed
+   - This creates an interactive experience that wouldn't be possible without threading
+
+#### Why Use Magical Clones (Threads)?
+
+1. **Responsiveness**: Keep your applications responsive while doing long tasks
+   - Example: Downloading files while letting users continue browsing
+2. **Performance**: Use multiple CPU cores at once for faster processing
+   - Example: Processing multiple images simultaneously
+3. **Real-time Actions**: Handle events while other code runs
+   - Example: Checking for new messages while playing a game
+4. **Time-based Operations**: Schedule actions to happen at specific times
+   - Example: Automatically saving a document every 5 minutes
+
+#### Multiple Threads: An Entire Party of Adventurers
+
+For bigger quests, you might need multiple clones working together:
 
 ```java
-// Reading a character sheet from a file
-try (BufferedReader characterReader = new BufferedReader(new FileReader("hero.txt"))) {
- String characterName = characterReader.readLine();
- String characterClass = characterReader.readLine();
- int level = Integer.parseInt(characterReader.readLine());
+// From Multithreading/Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Creating two adventurers for different quests
+        Thread thread1 = new Thread(new MyRunnable());
+        Thread thread2 = new Thread(new MyRunnable());
 
- System.out.println("Character loaded!");
- System.out.println("Name: " + characterName);
- System.out.println("Class: " + characterClass);
- System.out.println("Level: " + level);
-} catch (IOException e) {
- System.out.println("Could not load character file.");
-} catch (NumberFormatException e) {
- System.out.println("Character file is corrupted.");
+        // Send them off at the same time!
+        thread1.start();
+        thread2.start();
+    }
 }
 ```
 
-**File Writing Example:**
-
 ```java
-// Saving a high score to a file
-try (FileWriter scoreWriter = new FileWriter("highscores.txt", true)) { // true for append mode
-    String playerName = "Dragon Slayer";
-    int score = 9500;
-
-    // Add the new high score as a new line
-    scoreWriter.write(playerName + ": " + score + "\n");
-    System.out.println("High score recorded!");
-} catch (IOException e) {
-    System.out.println("Could not save your score.");
+// From Multithreading/MyRunnable.java
+public class MyRunnable implements Runnable {
+    @Override
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Thread interrupted");
+            }
+            // Each thread reports its progress with its name
+            System.out.println(Thread.currentThread().getName() + " running " + i);
+        }
+    }
 }
 ```
 
-When working with files, remember:
-
-- Always close your resources (try-with-resources does this for you)
-- Check for errors with proper exception handling
-- Files can be locked by other programs or have permission issues
-- Files might not exist when you try to read them
-
-With these magical file tools, your Java programs can remember information even after they finish running!
+**Output:**
 
 ### Practice Adventures: Level Up Your Skills!
 
